@@ -176,10 +176,11 @@
   function onOk(r){$('form').style.display='none';$('done').style.display='block';$('doneCode').textContent=r.code;if(r.cvUrl)$('cvLine').innerHTML='تم استلام سيرتك الذاتية ✅';window.scrollTo({top:0,behavior:'smooth'});}
 
   function loadConfig(){
-    if(!WEBAPP_URL || WEBAPP_URL.indexOf('PASTE_')===0){ render(FALLBACK); return; }
+    render(FALLBACK);                                   // اعرض المحتوى فوراً (نفس شكل المعاينة)
+    if(!WEBAPP_URL || WEBAPP_URL.indexOf('PASTE_')===0){ return; }
     fetch(WEBAPP_URL+'?config=1').then(function(r){return r.json();})
-      .then(function(C){ render(C); })
-      .catch(function(){ render(FALLBACK); });
+      .then(function(C){ if(C && C.title) render(C); }) // حدّث من الشيت فقط لو رجع إعداد صحيح
+      .catch(function(){ /* يبقى المحتوى الافتراضي ظاهراً */ });
   }
   loadConfig();
 
